@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алексей Гетманец](https://up.htmlacademy.ru/javascript/17/user/478225).
-* Наставник: `Неизвестно`.
+* Наставник: `Кексобот`.
 
 ---
 
