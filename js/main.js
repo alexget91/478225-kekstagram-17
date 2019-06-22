@@ -149,6 +149,7 @@ var photoInput = document.querySelector('#upload-file');
 var imageUploadForm = document.querySelector('.img-upload__overlay');
 var uploadedImage = imageUploadForm.querySelector('.img-upload__preview img');
 var uploadedImageDefaultClass = uploadedImage.getAttribute('class');
+var uploadedImageDescription = imageUploadForm.querySelector('.text__description');
 var imageUploadFormClose = imageUploadForm.querySelector('#upload-cancel');
 var effectsList = imageUploadForm.querySelector('.effects__list');
 var effectLevel = imageUploadForm.querySelector('.effect-level');
@@ -166,7 +167,7 @@ var closeUploadForm = function () {
 };
 
 var onUploadEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === ESC_KEYCODE && evt.target !== uploadedImageDescription) {
     closeUploadForm();
   }
 };
