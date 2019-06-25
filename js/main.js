@@ -154,6 +154,7 @@ var imageUploadFormClose = imageUploadForm.querySelector('#upload-cancel');
 var effectsList = imageUploadForm.querySelector('.effects__list');
 var effectLevel = imageUploadForm.querySelector('.effect-level');
 var effectLevelInput = effectLevel.querySelector('.effect-level__value');
+var effectLevelLine = effectLevel.querySelector('.effect-level__line');
 var effectLevelPin = effectLevel.querySelector('.effect-level__pin');
 var effectLevelDepth = effectLevel.querySelector('.effect-level__depth');
 
@@ -189,7 +190,9 @@ var setUploadedImageFilter = function () {
   uploadedImage.style.filter = getEffectValue(effectsList.querySelector('.effects__radio:checked').value, effectLevelInput.value);
 };
 
-var setEffectSliderPosition = function (percent) {
+var setEffectSliderPosition = function (position) {
+  var percent = typeof position !== 'undefined' ? position / effectLevelLine.offsetWidth * 100 : EFFECT_SLIDER_DEFAULT_VALUE;
+
   effectLevelInput.value = percent;
   effectLevelPin.style.left = percent + '%';
   effectLevelDepth.style.width = percent + '%';
@@ -208,7 +211,7 @@ photoInput.addEventListener('change', function (evt) {
     fileReader.readAsDataURL(files[0]);
   }
 
-  addEffectToImage('none');
+  applyEffect('none');
   resetUploadedImageScale();
   imageUploadForm.classList.remove('hidden');
   document.addEventListener('keydown', onUploadEscPress);
@@ -221,9 +224,9 @@ imageUploadFormClose.addEventListener('keydown', function (evt) {
   }
 });
 
-var addEffectToImage = function (effect) {
+var applyEffect = function (effect) {
   if (effect !== 'none') {
-    setEffectSliderPosition(EFFECT_SLIDER_DEFAULT_VALUE);
+    setEffectSliderPosition();
     effectLevel.classList.remove('hidden');
 
   } else {
@@ -237,12 +240,8 @@ var addEffectToImage = function (effect) {
 
 effectsList.addEventListener('change', function (evt) {
   if (evt.target.name === 'effect') {
-    addEffectToImage(evt.target.value);
+    applyEffect(evt.target.value);
   }
-});
-
-effectLevelPin.addEventListener('mouseup', function () {
-  setUploadedImageFilter();
 });
 
 /* Масштабирование загруженного изображения */
@@ -269,4 +268,31 @@ uploadedImageScale.querySelector('.scale__control--smaller').addEventListener('c
 
 uploadedImageScale.querySelector('.scale__control--bigger').addEventListener('click', function () {
   setUploadedImageScale(true);
+});
+
+/* Перетаскиваание слайдера */
+
+effectLevelPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startX = evt.clientX;
+
+  var onMouseMove = function (moveEvt) {
+    var newPosition = effectLevelPin.offsetLeft - startX + moveEvt.clientX;
+
+    if (newPosition >= 0 && newPosition <= effectLevelLine.offsetWidth) {
+      startX = moveEvt.clientX;
+      setEffectSliderPosition(newPosition);
+      setUploadedImageFilter();
+    }
+  };
+
+  var onMouseUp = function () {
+    setUploadedImageFilter();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
