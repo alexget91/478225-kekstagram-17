@@ -23,6 +23,7 @@
     return photosFragment;
   };
 
-
-  document.querySelector('.pictures').appendChild(renderPreviewList(window.data.getPhotosData()));
+  window.backend.load(function (arrPhotos) {
+    document.querySelector('.pictures').appendChild(renderPreviewList(arrPhotos));
+  });
 })();
