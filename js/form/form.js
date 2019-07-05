@@ -3,6 +3,7 @@
 
 (function () {
   var EFFECT_SLIDER_DEFAULT_VALUE = 100;
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 
   var photoInput = document.querySelector('#upload-file');
@@ -26,13 +27,24 @@
     var files = evt.target.files;
 
     if (FileReader && files && files.length) {
-      var fileReader = new FileReader();
+      var matches = FILE_TYPES.some(function (it) {
+        return files[0].name.toLowerCase().endsWith(it);
+      });
 
-      fileReader.onload = function () {
-        uploadedImage.src = fileReader.result;
-      };
+      if (matches) {
+        var fileReader = new FileReader();
 
-      fileReader.readAsDataURL(files[0]);
+        fileReader.addEventListener('load', function () {
+          uploadedImage.src = fileReader.result;
+        });
+
+        fileReader.readAsDataURL(files[0]);
+        window.error.hide();
+        window.popup.open();
+
+      } else {
+        window.error.show('Некорректный формат файла');
+      }
     }
   });
 

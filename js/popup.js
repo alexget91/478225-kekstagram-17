@@ -10,6 +10,11 @@
   var uploadedImageDescription = imageUploadForm.querySelector('.text__description');
   var imageUploadFormClose = imageUploadForm.querySelector('#upload-cancel');
 
+  var openUploadForm = function () {
+    imageUploadForm.classList.remove('hidden');
+    document.addEventListener('keydown', onUploadEscPress);
+  };
+
   var closeUploadForm = function () {
     imageUploadForm.classList.add('hidden');
     photoInput.value = '';
@@ -22,15 +27,12 @@
     }
   };
 
-  photoInput.addEventListener('change', function () {
-    imageUploadForm.classList.remove('hidden');
-    document.addEventListener('keydown', onUploadEscPress);
-  });
-
   imageUploadFormClose.addEventListener('click', closeUploadForm);
   imageUploadFormClose.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       closeUploadForm();
     }
   });
+
+  window.popup = {open: openUploadForm};
 })();
