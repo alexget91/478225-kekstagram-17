@@ -34,6 +34,9 @@
   window.backend.load(function (arrPhotos) {
     renderPreviewList(arrPhotos);
     window.filters.init(arrPhotos);
+
+    window.photo.show(arrPhotos[0]);
+    document.querySelector('.big-picture').classList.remove('hidden');
   });
 
   window.gallery = {render: renderPreviewList};

@@ -4,18 +4,6 @@
   var UPLOAD_URL = 'https://js.dump.academy/kekstagram';
   var DOWNLOAD_URL = 'https://js.dump.academy/kekstagram/data';
 
-  var loadErrorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '16px';
-    node.textContent = errorMessage;
-
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
-
   var load = function (onLoad) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -27,7 +15,7 @@
         onLoad(xhr.response);
 
       } else {
-        loadErrorHandler('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        window.error.show('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
 
@@ -43,7 +31,7 @@
         onLoad(xhr.response);
 
       } else {
-        loadErrorHandler('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        window.error.show('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
 
