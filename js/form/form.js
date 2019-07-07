@@ -39,8 +39,8 @@
         });
 
         fileReader.readAsDataURL(files[0]);
-        window.error.hide();
-        window.popup.open();
+        // window.error.hide();
+        formPopup.open();
 
       } else {
         window.error.show('Некорректный формат файла');
@@ -72,6 +72,16 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  var formPopup = window.popup(imageUploadForm);
+
+  formPopup.checkClosePossibility = function (target) {
+    return target !== imageUploadForm.querySelector('.text__description');
+  };
+
+  formPopup.onPopupClose = function () {
+    photoInput.value = '';
+  };
 
   window.form = {setEffectSliderPosition: setEffectSliderPosition};
 })();
