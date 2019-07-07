@@ -1,38 +1,53 @@
-// Диалоговое окно загрузки изображения
+// Универсальное диалоговое окно
 'use strict';
 
 (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
+  var MODAL_OPEN_CLASS = 'modal-open';
 
-  var photoInput = document.querySelector('#upload-file');
-  var imageUploadForm = document.querySelector('.img-upload__overlay');
-  var uploadedImageDescription = imageUploadForm.querySelector('.text__description');
-  var imageUploadFormClose = imageUploadForm.querySelector('#upload-cancel');
 
-  var openUploadForm = function () {
-    imageUploadForm.classList.remove('hidden');
-    document.addEventListener('keydown', onUploadEscPress);
+  window.popup = function (popupElement) {
+    var Popup = function () {
+      this.closeBtn = popupElement.querySelector('.js-popup-close');
+    };
+
+    Popup.prototype = {
+      open: function () {
+        popupElement.classList.remove('hidden');
+        document.body.classList.add(MODAL_OPEN_CLASS);
+        document.addEventListener('keydown', this.onPopupEscPress);
+      },
+
+      close: function () {
+        popupElement.classList.add('hidden');
+        newPopup.onPopupClose();
+        document.body.classList.remove(MODAL_OPEN_CLASS);
+        document.removeEventListener('keydown', this.onPopupEscPress);
+      },
+
+      onPopupEscPress: function (evt) {
+        if (evt.keyCode === ESC_KEYCODE && newPopup.checkClosePossibility(evt.target)) {
+          newPopup.close();
+        }
+      },
+
+      checkClosePossibility: function () {
+        return true;
+      },
+
+      onPopupClose: function () {}
+    };
+
+    var newPopup = new Popup();
+
+    newPopup.closeBtn.addEventListener('click', newPopup.close);
+    newPopup.closeBtn.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ENTER_KEYCODE) {
+        newPopup.close();
+      }
+    });
+
+    return newPopup;
   };
-
-  var closeUploadForm = function () {
-    imageUploadForm.classList.add('hidden');
-    photoInput.value = '';
-    document.removeEventListener('keydown', onUploadEscPress);
-  };
-
-  var onUploadEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE && evt.target !== uploadedImageDescription) {
-      closeUploadForm();
-    }
-  };
-
-  imageUploadFormClose.addEventListener('click', closeUploadForm);
-  imageUploadFormClose.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      closeUploadForm();
-    }
-  });
-
-  window.popup = {open: openUploadForm};
 })();

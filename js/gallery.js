@@ -10,6 +10,7 @@
     photoElement.querySelector('.picture__img').src = data.url;
     photoElement.querySelector('.picture__likes').textContent = data.likes;
     photoElement.querySelector('.picture__comments').textContent = data.comments.length;
+    photoElement.dataset.id = data.id;
 
     return photoElement;
   };
@@ -32,11 +33,25 @@
   };
 
   window.backend.load(function (arrPhotos) {
+    arrPhotos.forEach(function (it, index) {
+      it.id = index;
+    });
+
     renderPreviewList(arrPhotos);
     window.filters.init(arrPhotos);
 
-    window.photo.show(arrPhotos[0]);
-    document.querySelector('.big-picture').classList.remove('hidden');
+    pictures.addEventListener('click', function (evt) {
+      var target = evt.target;
+
+      while (target !== pictures) {
+        if (target.classList.contains('picture')) {
+          evt.preventDefault();
+          window.photo.show(arrPhotos[target.dataset.id]);
+          return;
+        }
+        target = target.parentNode;
+      }
+    });
   });
 
   window.gallery = {render: renderPreviewList};
