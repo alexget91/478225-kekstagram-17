@@ -18,7 +18,7 @@
   var setEffectSliderPosition = function (position) {
     var percent = typeof position !== 'undefined' ? position / effectLevelLine.offsetWidth * 100 : EFFECT_SLIDER_DEFAULT_VALUE;
 
-    effectLevelInput.value = percent;
+    effectLevelInput.value = Math.round(percent);
     effectLevelPin.style.left = percent + '%';
     effectLevelDepth.style.width = percent + '%';
   };
@@ -76,7 +76,8 @@
   var formPopup = window.popup(imageUploadForm);
 
   formPopup.checkClosePossibility = function (target) {
-    return target !== imageUploadForm.querySelector('.text__description');
+    return target !== imageUploadForm.querySelector('.text__description')
+      && target !== imageUploadForm.querySelector('.js-hashtags');
   };
 
   formPopup.onPopupClose = function () {
